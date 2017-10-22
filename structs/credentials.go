@@ -2,8 +2,10 @@ package structs
 
 // TwitterCredentials struct for twitter creds
 type TwitterCredentials struct {
-	Key    string `json:"key"`
-	Secret string `json:"secret"`
+	ConsumerKey    string `json:"consumerKey"`
+	ConsumerSecret string `json:"consumerSecret"`
+	AccessToken    string `json:"accessToken"`
+	AccessSecret   string `json:"accessSecret"`
 }
 
 // Config struct for general configuration

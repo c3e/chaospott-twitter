@@ -23,7 +23,7 @@ func GetConfig() structs.Config {
 }
 
 func read(filename string) []byte {
-	b, err := ioutil.ReadFile("config.json")
+	b, err := ioutil.ReadFile(filename)
 	if err != nil {
 		log.Fatal("Failed to read config")
 	}

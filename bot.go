@@ -8,6 +8,9 @@ import (
 	"strings"
 	"time"
 
+	"github.com/dghubble/go-twitter/twitter"
+	"github.com/dghubble/oauth1"
+
 	"github.com/PuloV/ics-golang"
 	"github.com/fronbasal/chaospott-twitter/helpers"
 	"github.com/fronbasal/chaospott-twitter/structs"
@@ -17,6 +20,11 @@ var tweetQueue []structs.CalTweet
 var calendar *ics.Calendar
 
 func main() {
+	creds := helpers.GetTwitterCredentials()
+	config := oauth1.NewConfig(creds.ConsumerKey, creds.ConsumerSecret)
+	token := oauth1.NewToken(creds.AccessToken, creds.AccessSecret)
+	httpClient := config.Client(oauth1.NoContext, token)
+	client := twitter.NewClient(httpClient)
 	parser := ics.New()
 	ics.FilePath = "tmp"
 	ics.DeleteTempFiles = false
@@ -51,5 +59,12 @@ func main() {
 		t.Timestamp = e.GetStart()
 		tweetQueue = append(tweetQueue, t)
 	}
-	fmt.Println(tweetQueue[0].Text)
+	for _, tweet := range tweetQueue {
+		fmt.Println("Tweeting: " + tweet.Text)
+		t, _, err := client.Statuses.Update(tweet.Text, nil)
+		if err != nil {
+			log.Fatal("Failed to tweet: " + err.Error())
+		}
+		fmt.Println("Tweeted! https://twitter.com/" + t.User.ScreenName + "/status/" + t.IDStr)
+	}
 }
