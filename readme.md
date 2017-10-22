@@ -8,6 +8,6 @@ It pulls its data from an ICAL calendar and then posts that information to twitt
 ## Installation
 
 To deploy this app, clone it into the normal go hirachy.
-Copy `credentials.example.json` to `credentials.json` and insert the Twitter API token.
-Then edit the `config.json` to the target calendar.
-You are now ready to run the app.
+Copy the two `.example.json` files to the correct target and insert the requested information.
+
+You are now ready to run the bot.

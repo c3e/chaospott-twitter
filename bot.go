@@ -6,10 +6,15 @@ import (
 	"log"
 	"net/http"
 	"strings"
+	"time"
 
 	"github.com/PuloV/ics-golang"
 	"github.com/fronbasal/chaospott-twitter/helpers"
+	"github.com/fronbasal/chaospott-twitter/structs"
 )
+
+var tweetQueue []structs.CalTweet
+var calendar *ics.Calendar
 
 func main() {
 	parser := ics.New()
@@ -28,8 +33,23 @@ func main() {
 	}
 	parser.Load(string(b[:]))
 	parser.Wait()
-	cal, _ := parser.GetCalendars()
-	for _, e := range cal[0].GetEvents() {
-		fmt.Println(e.GetDescription() + " am " + e.GetStart().Format("02. um 15:04") + " @ " + strings.Replace(e.GetLocation(), "\\", "", -1))
+	cal, err := parser.GetCalendars()
+	if err != nil {
+		log.Fatal("Failed to get events: " + err.Error())
 	}
+	calendar = cal[0]
+	events, err := calendar.GetEventsByDate(time.Now().Add(time.Hour * 24))
+	if err != nil {
+		log.Fatal("Could not get calendar: " + err.Error())
+	}
+	for _, e := range events {
+		var t structs.CalTweet
+		t.Text = e.GetDescription() + " am " + e.GetStart().Format("02. um 15:04") + " @ " + strings.Replace(e.GetLocation(), "\\", "", -1)
+		if len(t.Text) > 140 {
+			fmt.Println("Failed to add event " + e.GetDescription() + " to the queue. Text is too long.")
+		}
+		t.Timestamp = e.GetStart()
+		tweetQueue = append(tweetQueue, t)
+	}
+	fmt.Println(tweetQueue[0].Text)
 }
