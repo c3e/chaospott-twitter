@@ -1,4 +1,2 @@
-credentials.json
-tmp
-config.json
+config/credentials.json
 .idea
