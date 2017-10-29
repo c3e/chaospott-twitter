@@ -1,13 +1,14 @@
 package main
 
 import (
-	"github.com/dghubble/oauth1"
-	"github.com/fronbasal/chaospott-twitter/helpers"
-	"github.com/dghubble/go-twitter/twitter"
 	"encoding/json"
-	"github.com/fronbasal/chaospott-twitter/structs"
-	"time"
 	"math/rand"
+	"time"
+
+	"github.com/c3e/chaospott-twitter/helpers"
+	"github.com/c3e/chaospott-twitter/structs"
+	"github.com/dghubble/go-twitter/twitter"
+	"github.com/dghubble/oauth1"
 )
 
 func main() {
